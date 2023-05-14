@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GateauController!{% endblock %}
+
+{% block body %}
+    {% for gateau in gateaux %}
+        <div class="border border-light m-2 p-3">
+            <h3>{{ gateau.nom }}</h3>
+            <p><strong>{{ gateau.description }}</strong></p>
+            <a href="{{ path('app_gateau_show', {id:gateau.id}) }}" class="btn btn-success">VOIR</a>
+        </div>
+    {% endfor %}
+{% endblock %}

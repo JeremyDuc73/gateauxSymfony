@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GateauController!{% endblock %}
+
+{% block body %}
+    <div class="border border-light mt-4">
+
+        <h3>{{ gateau.nom }}</h3>
+        <p><strong>{{ gateau.description }}</strong></p>
+        <div class="border border-light">
+            {%for ingredient in gateau.ingredients %}
+
+                <p> - {{ ingredient.nom }}</p>
+
+            {% endfor %}
+            {%for image in gateau.images %}
+                <img src="{{ vich_uploader_asset(image,'imageFile')|imagine_filter('vignette') }}">
+            {% endfor %}
+        </div>
+        <p>
+            <strong>
+                <a href="{{ path('app_like', {id:gateau.id}) }}" class="btn like">
+                    <i class="thumb bi bi-hand-thumbs-up{% if gateau.isLikedBy(app.user) %}-fill{% endif %}"></i>
+                    <span class="nbrLikes">{{ gateau.likes|length}}</span>
+                </a>
+            </strong>
+        </p>
+        <a href="{{ path('app_gateau_delete', {id:gateau.id}) }}" class="btn btn-danger">SUPPRIMER</a>
+    </div>
+
+    <script>
+
+
+        function like(event){
+            event.preventDefault()
+
+            fetch(this.href)
+                .then(response=>response.json())
+                .then((data)=>{
+                    console.log(this)
+                    this.querySelector('.nbrLikes').innerHTML = data.count
+                    if(data.liked){
+                        this.querySelector('.thumb').classList.remove('bi-hand-thumbs-up')
+                        this.querySelector('.thumb').classList.add('bi-hand-thumbs-up-fill')
+
+                    }else{
+                        this.querySelector('.thumb').classList.remove('bi-hand-thumbs-up-fill')
+                        this.querySelector('.thumb').classList.add('bi-hand-thumbs-up')
+
+
+                    }
+                })
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const boutonsLike = document.querySelectorAll('.like')
+
+            boutonsLike.forEach((bouton)=>{
+                bouton.addEventListener('click', like)
+            })
+        })
+
+    </script>
+{% endblock %}
